@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Document Summarizer</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-dark bg-dark mb-4 shadow">
+        <div class="container">
+            <span class="navbar-brand mb-0 h1">🧠 AI Document Summarizer</span>
+        </div>
+    </nav>
+
+    <div class="container" style="max-width: 800px;">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Panel de Carga -->
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-body p-4 text-center">
+                <h4 class="mb-3">Cargar Documento</h4>
+                <p class="text-muted">Sube un archivo PDF o TXT para generar un resumen inteligente instantáneo.</p>
+                <form action="/resumir" method="POST" enctype="multipart/form-data">
+                    <div class="input-group mb-3 justify-content-center">
+                        <input type="file" name="documento" class="form-control" accept=".pdf, .txt" required style="max-width: 400px;">
+                        <button type="submit" class="btn btn-primary fw-bold">Analizar Archivo</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Panel de Resultados -->
+        {% if resumen %}
+        <div class="card shadow border-0 border-top border-primary border-4">
+            <div class="card-body p-5">
+                <h3 class="mb-4">Resultados del Análisis: <span class="text-primary fs-5">{{ filename }}</span></h3>
+                <div class="fs-5 lh-lg text-dark">
+                    {{ resumen | safe }}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Inicio - Netflix</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background-color: #141414;
+        color: white;
+        overflow-x: hidden;
+      }
+      .row-posters {
+        display: flex;
+        overflow-y: hidden;
+        overflow-x: scroll;
+        padding: 20px 0;
+        scroll-behavior: smooth;
+      }
+      .row-posters::-webkit-scrollbar {
+        display: none;
+      }
+      .row-poster {
+        width: 250px;
+        max-height: 140px;
+        object-fit: cover;
+        margin-right: 15px;
+        transition: transform 450ms;
+        border-radius: 4px;
+      }
+      .row-poster:hover {
+        transform: scale(1.08);
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <nav
+      class="navbar navbar-dark px-4 py-3 position-fixed w-100 z-3"
+      style="
+        background: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.9) 0%,
+          rgba(0, 0, 0, 0) 100%
+        );
+      "
+    >
+      <h2 class="text-danger fw-bold mb-0">NETFLIX</h2>
+      <span class="text-white ms-auto"
+        >Viendo como: <strong>{{ perfil }}</strong></span
+      >
+    </nav>
+    <div class="pt-5 mt-5 px-4">
+      {% for categoria, peliculas in catalogo.items() %}
+      <h4 class="fw-bold mt-4">{{ categoria }}</h4>
+      <div class="row-posters">
+        {% for pelicula in peliculas %}
+        <img
+          src="{{ pelicula.img }}"
+          alt="{{ pelicula.titulo }}"
+          class="row-poster shadow"
+          title="{{ pelicula.titulo }}"
+        />
+        {% endfor %}
+      </div>
+      {% endfor %}
+    </div>
+  </body>
+</html>

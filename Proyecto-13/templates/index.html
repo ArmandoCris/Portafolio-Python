@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Sistema de Reservas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Importación de FullCalendar -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+    <!-- Importación de Bootstrap JS para el Modal -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <h2 class="mb-4 fw-bold text-primary">Gestor de Reservas</h2>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Contenedor del Calendario -->
+        <div class="card shadow border-0 mb-5">
+            <div class="card-body">
+                <div id="calendar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal emergente para Nueva Reserva -->
+    <div class="modal fade" id="modalReserva" tabindex="-1">
+        <div class="modal-dialog">
+            <form action="/reservar" method="POST" class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">Agendar Nueva Cita</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Nombre del Cliente</label>
+                        <input type="text" name="cliente" class="form-control" required autocomplete="off">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Fecha y Hora de Inicio</label>
+                        <input type="datetime-local" name="fecha_inicio" id="fecha_inicio" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Fecha y Hora de Fin</label>
+                        <input type="datetime-local" name="fecha_fin" id="fecha_fin" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tipo de Servicio</label>
+                        <select name="color" class="form-select">
+                            <option value="#0d6efd">Asesoría Técnica (Azul)</option>
+                            <option value="#198754">Instalación de Software (Verde)</option>
+                            <option value="#dc3545">Urgencia Crítica (Rojo)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Confirmar Reserva</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            var modal = new bootstrap.Modal(document.getElementById('modalReserva'));
+            
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: 'es',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                events: '/api/eventos', // Aquí el calendario consume la API de Flask
+                selectable: true,
+                select: function(info) {
+                    // Prellena el formulario con la fecha seleccionada en la cuadrícula
+                    document.getElementById('fecha_inicio').value = info.startStr + 'T10:00';
+                    document.getElementById('fecha_fin').value = info.startStr + 'T11:00';
+                    modal.show();
+                }
+            });
+            calendar.render();
+        });
+    </script>
+</body>
+</html>

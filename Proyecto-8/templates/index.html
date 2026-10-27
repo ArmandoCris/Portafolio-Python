@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2 class="mb-4">Catálogo de Productos</h2>
+<div class="row">
+    {% for prod in productos %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 text-center shadow-sm">
+            <div class="card-body">
+                <h1 class="display-4">{{ prod[3] }}</h1>
+                <h5 class="card-title">{{ prod[1] }}</h5>
+                <p class="card-text fs-5 text-primary">${{ "%.2f"|format(prod[2]) }}</p>
+                <p class="card-text text-muted">Stock disponible: {{ prod[4] }}</p>
+                
+                {% if prod[4] > 0 %}
+                    <a href="{{ url_for('agregar', id=prod[0]) }}" class="btn btn-primary w-100">Agregar al carrito</a>
+                {% else %}
+                    <button class="btn btn-secondary w-100" disabled>Agotado</button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

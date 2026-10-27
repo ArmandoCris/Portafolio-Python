@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2 class="mb-4">Tu Carrito</h2>
+{% if productos_carrito %}
+    <table class="table table-bordered bg-white shadow-sm text-center align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>Imagen</th>
+                <th>Producto</th>
+                <th>Precio</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for prod in productos_carrito %}
+            <tr>
+                <td class="fs-4">{{ prod[3] }}</td>
+                <td>{{ prod[1] }}</td>
+                <td>${{ "%.2f"|format(prod[2]) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="2" class="text-end fs-5">Total:</th>
+                <th class="fs-5 text-success">${{ "%.2f"|format(total) }}</th>
+            </tr>
+        </tfoot>
+    </table>
+    <div class="text-end">
+        <a href="{{ url_for('pagar') }}" class="btn btn-success btn-lg">Finalizar Compra</a>
+    </div>
+{% else %}
+    <div class="alert alert-info">Tu carrito está vacío.</div>
+    <a href="{{ url_for('index') }}" class="btn btn-primary">Volver al catálogo</a>
+{% endif %}
+{% endblock %}
